@@ -5,7 +5,7 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { database } from "./config/db.js";
-
+import userRoutes from './routes/userRoutes.js'
 dotenv.config();
 
 const port = process.env.PORT || 4000;
@@ -27,3 +27,12 @@ app.listen(port, async () => {
     console.log(error);
   }
 });
+
+//default route
+app.get("/", (req, res) => {
+  res.json({ message: "hello" });
+});
+
+//user route
+app.use("/user",userRoutes)
+
