@@ -17,8 +17,16 @@ const getUsers = async (req, res) => {
 
 // register users
 const registerUsers = async (req, res) => {
-  const { firstName, lastName, email, password, occupation, location,paymentMode,role } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    occupation,
+    location,
+    paymentMode,
+    role,
+  } = req.body;
 
   const exisitingUser = await userModel.findOne({ email });
   if (exisitingUser) {
@@ -37,7 +45,7 @@ const registerUsers = async (req, res) => {
         occupation,
         location,
         paymentMode,
-        role
+        role,
       });
       res
         .status(200)
@@ -49,7 +57,46 @@ const registerUsers = async (req, res) => {
 };
 
 //edit users
-const editUsers = async (req, res) =>{
-    
-}
+const editUsers = async (req, res) => {
+  const { id } = req.params;
+  const {
+    firstName,
+    lastName,
+    password,
+    occupation,
+    location,
+    paymentMode,
+    oldPassword,
+    newPassword,
+    role,
+  } = req.body;
+
+  try {
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (occupation) user.occupation = occupation;
+    if (location) user.location = location;
+    if (paymentMode) user.paymentMode = paymentMode;
+    if (role) user.role = role;
+
+    if (oldPassword && newPassword) {
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ error: "Old password is incorrect" });
+      }
+      const hashedPassword = await bcrypt.hash(newPassword, 5);
+      user.password = hashedPassword;
+    }
+
+    await user.save();
+    res.status(200).json({ user, message: "User updated successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 export { getUsers, registerUsers, editUsers };
