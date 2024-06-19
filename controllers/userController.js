@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { error } from "console";
 import jsonwebtoken from "jsonwebtoken";
+import mongoose from "mongoose";
 
 //getAllUser
 const getUsers = async (req, res) => {
@@ -71,31 +72,49 @@ const editUsers = async (req, res) => {
   } = req.body;
 
   try {
-    const user = await userModel.findById(id);
-    if (!user) {
+    const edit = await userModel.findById(id);
+
+    if (!edit) {
       return res.status(404).json({ error: "User not found" });
     }
-    if (firstName) user.firstName = firstName;
-    if (lastName) user.lastName = lastName;
-    if (occupation) user.occupation = occupation;
-    if (location) user.location = location;
-    if (paymentMode) user.paymentMode = paymentMode;
-    if (role) user.role = role;
+
+    if (firstName) edit.firstName = firstName;
+    if (lastName) edit.lastName = lastName;
+    if (occupation) edit.occupation = occupation;
+    if (location) edit.location = location;
+    if (paymentMode) edit.paymentMode = paymentMode;
+    if (role) edit.role = role;
 
     if (oldPassword && newPassword) {
-      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      const isMatch = await bcrypt.compare(oldPassword, edit.password);
       if (!isMatch) {
         return res.status(400).json({ error: "Old password is incorrect" });
       }
+      3;
       const hashedPassword = await bcrypt.hash(newPassword, 5);
-      user.password = hashedPassword;
+      edit.password = hashedPassword;
     }
 
-    await user.save();
-    res.status(200).json({ user, message: "User updated successfully" });
+    await edit.save();
+    res.status(200).json({ edit, message: "User updated successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-export { getUsers, registerUsers, editUsers };
+const deleteUsers = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleteUser = await userModel.findByIdAndDelete(id);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ error: error.message });
+    }
+
+    res.status(200).json({ deleteUser, message: "User deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+export { getUsers, registerUsers, editUsers, deleteUsers };
