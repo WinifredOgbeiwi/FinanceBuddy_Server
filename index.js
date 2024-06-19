@@ -1,24 +1,29 @@
-import express from 'express';
-import helmet from 'helmet'
-import cors from 'cors'
-import morgan from 'morgan'
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
+import express from "express";
+import helmet from "helmet";
+import cors from "cors";
+import morgan from "morgan";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import { database } from "./config/db.js";
 
-dotenv.config()
+dotenv.config();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 const app = express();
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 app.use(helmet());
 app.use(morgan("common"));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.listen(port, ()=>{
-    console.log(`listening to port-${port}`)
-})
-
-
+//port and database
+app.listen(port, async () => {
+  try {
+    await database;
+    console.log(`connected and listening to port:${port}`);
+  } catch (error) {
+    console.log(error);
+  }
+});
