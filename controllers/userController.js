@@ -62,7 +62,6 @@ const editUsers = async (req, res) => {
   const {
     firstName,
     lastName,
-    password,
     occupation,
     location,
     paymentMode,
