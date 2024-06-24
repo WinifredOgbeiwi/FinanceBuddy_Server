@@ -3,6 +3,7 @@ import {
   deleteUsers,
   editUsers,
   getUsers,
+  loginUsers,
   registerUsers,
 } from "../controllers/userController.js";
 
@@ -12,5 +13,5 @@ router.get("/", getUsers);
 router.post("/register", registerUsers);
 router.put("/edit/:id", editUsers);
 router.delete("/delete/:id", deleteUsers);
-
+router.post("/login", loginUsers);
 export default router;

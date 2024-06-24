@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import { error } from "console";
 import jsonwebtoken from "jsonwebtoken";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-//getAllUser
 const getUsers = async (req, res) => {
   try {
     const users = await userModel.find({}).sort({ createdAt: -1 });
@@ -16,7 +16,7 @@ const getUsers = async (req, res) => {
   }
 };
 
-// register users
+
 const registerUsers = async (req, res) => {
   const {
     firstName,
@@ -57,7 +57,7 @@ const registerUsers = async (req, res) => {
   });
 };
 
-//edit users
+
 const editUsers = async (req, res) => {
   const { id } = req.params;
   const {
@@ -117,4 +117,31 @@ const deleteUsers = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-export { getUsers, registerUsers, editUsers, deleteUsers };
+
+const loginUsers = async (req, res) => {
+const {email,password} = req.body;
+try {
+    const user = await userModel.findOne({email});
+    if(user){
+        const passwordMatch = await bcrypt.compare(password,user.password);
+        if(passwordMatch){
+            const token = jsonwebtoken.sign(
+              { userId: user._id },
+              process.env.JWT_SECRET,
+              { expiresIn: "1h" }
+            );
+            res.status(200).json({message:"Successful login", token})
+        }
+        else{
+            res.status(400).json({message:"Incorrect password"})
+        }
+    }
+    else{
+        res.status(404).json({message:"User not found"})
+    }
+    
+} catch (error) {
+    res.status(500).json({error:error.message})
+}
+}
+export { getUsers, registerUsers, editUsers, deleteUsers, loginUsers };
