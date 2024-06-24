@@ -10,9 +10,11 @@ dotenv.config();
 
 const port = process.env.PORT || 4000;
 const app = express();
-
+const corsOption = {
+  origin: "http://localhost:5173",
+};
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOption));
 app.use(helmet());
 app.use(morgan("common"));
 app.use(bodyParser.json());
