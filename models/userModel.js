@@ -32,11 +32,6 @@ const userSchema = new Schema(
       required: false,
       default: null,
     },
-    paymentMode: {
-      type: String,
-      required: false,
-      default: null,
-    },
     role: {
       type: String,
       enum: ["user", "admin"], // Define roles

@@ -25,7 +25,6 @@ const registerUsers = async (req, res) => {
     password,
     occupation,
     location,
-    paymentMode,
     role,
   } = req.body;
 
@@ -45,7 +44,6 @@ const registerUsers = async (req, res) => {
         password: hash,
         occupation,
         location,
-        paymentMode,
         role,
       });
       res
@@ -65,7 +63,6 @@ const editUsers = async (req, res) => {
     lastName,
     occupation,
     location,
-    paymentMode,
     oldPassword,
     newPassword,
     role,
@@ -82,7 +79,6 @@ const editUsers = async (req, res) => {
     if (lastName) edit.lastName = lastName;
     if (occupation) edit.occupation = occupation;
     if (location) edit.location = location;
-    if (paymentMode) edit.paymentMode = paymentMode;
     if (role) edit.role = role;
 
     if (oldPassword && newPassword) {
