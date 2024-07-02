@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { error } from "console";
 import jsonwebtoken from "jsonwebtoken";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 
 const getUsers = async (req, res) => {
   try {
@@ -15,18 +14,24 @@ const getUsers = async (req, res) => {
     });
   }
 };
-
+const getSingleUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
 
 const registerUsers = async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    occupation,
-    location,
-    role,
-  } = req.body;
+  const { firstName, lastName, email, password, occupation, location, role } =
+    req.body;
 
   const exisitingUser = await userModel.findOne({ email });
   if (exisitingUser) {
@@ -54,7 +59,6 @@ const registerUsers = async (req, res) => {
     }
   });
 };
-
 
 const editUsers = async (req, res) => {
   const { id } = req.params;
@@ -115,29 +119,33 @@ const deleteUsers = async (req, res) => {
 };
 
 const loginUsers = async (req, res) => {
-const {email,password} = req.body;
-try {
-    const user = await userModel.findOne({email});
-    if(user){
-        const passwordMatch = await bcrypt.compare(password,user.password);
-        if(passwordMatch){
-            const token = jsonwebtoken.sign(
-              { userId: user._id },
-              process.env.JWT_SECRET,
-              { expiresIn: "1h" }
-            );
-            res.status(200).json({message:"Successful login", token})
-        }
-        else{
-            res.status(400).json({message:"Incorrect password"})
-        }
+  const { email, password } = req.body;
+  try {
+    const user = await userModel.findOne({ email });
+    if (user) {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (passwordMatch) {
+        const token = jsonwebtoken.sign(
+          { userId: user._id },
+          process.env.JWT_SECRET,
+          { expiresIn: "1h" }
+        );
+        res.status(200).json({ message: "Successful login", token });
+      } else {
+        res.status(400).json({ message: "Incorrect password" });
+      }
+    } else {
+      res.status(404).json({ message: "User not found" });
     }
-    else{
-        res.status(404).json({message:"User not found"})
-    }
-    
-} catch (error) {
-    res.status(500).json({error:error.message})
-}
-}
-export { getUsers, registerUsers, editUsers, deleteUsers, loginUsers };
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+export {
+  getUsers,
+  registerUsers,
+  editUsers,
+  deleteUsers,
+  loginUsers,
+  getSingleUser,
+};
