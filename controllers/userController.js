@@ -130,7 +130,7 @@ const loginUsers = async (req, res) => {
           process.env.JWT_SECRET,
           { expiresIn: "1h" }
         );
-        res.status(200).json({ message: "Successful login", token });
+        res.status(200).json({ message: "Successful login", token, user });
       } else {
         res.status(400).json({ message: "Incorrect password" });
       }
