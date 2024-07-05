@@ -30,8 +30,16 @@ const getSingleUser = async (req, res) => {
 };
 
 const registerUsers = async (req, res) => {
-  const { firstName, lastName, email, password, occupation, location, role } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    occupation,
+    location,
+    role,
+    image,
+  } = req.body;
 
   const exisitingUser = await userModel.findOne({ email });
   if (exisitingUser) {
@@ -50,6 +58,7 @@ const registerUsers = async (req, res) => {
         occupation,
         location,
         role,
+        image,
       });
       res
         .status(200)
@@ -84,7 +93,9 @@ const editUsers = async (req, res) => {
     if (occupation) edit.occupation = occupation;
     if (location) edit.location = location;
     if (role) edit.role = role;
-
+     if (req.file) {
+       edit.image = `public/images/${req.file.filename}`;
+     }
     if (oldPassword && newPassword) {
       const isMatch = await bcrypt.compare(oldPassword, edit.password);
       if (!isMatch) {
@@ -98,7 +109,8 @@ const editUsers = async (req, res) => {
     await edit.save();
     res.status(200).json({ edit, message: "User updated successfully" });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message })
+    console.log(error)
   }
 };
 

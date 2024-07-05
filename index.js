@@ -6,21 +6,27 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { database } from "./config/db.js";
 import userRoutes from './routes/userRoutes.js'
+import path from "path";
+import { fileURLToPath } from "url";
+
 dotenv.config();
 
 const port = process.env.PORT || 4000;
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const corsOption = {
   origin: "http://localhost:5173",
 };
+
 app.use(express.json());
 app.use(cors(corsOption));
 app.use(helmet());
-app.use(morgan("common"));
+// app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/public/images", express.static(path.join(__dirname, "public","images")));
 
-//port and database
 app.listen(port, async () => {
   try {
     await database;

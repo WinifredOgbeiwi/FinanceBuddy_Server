@@ -32,6 +32,11 @@ const userSchema = new Schema(
       required: false,
       default: null,
     },
+    image: {
+      type: String,
+      required: false,
+      default: null,
+    },
     role: {
       type: String,
       enum: ["user", "admin"], // Define roles
