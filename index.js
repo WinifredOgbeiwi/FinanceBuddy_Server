@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { database } from "./config/db.js";
 import userRoutes from './routes/userRoutes.js'
+import incomeRoutes from './routes/incomeRoutes.js'
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -22,7 +23,7 @@ const corsOption = {
 app.use(express.json());
 app.use(cors(corsOption));
 app.use(helmet());
-// app.use(morgan("common"));
+app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/public/images", express.static(path.join(__dirname, "public","images")));
@@ -37,10 +38,11 @@ app.listen(port, async () => {
 });
 
 //default route
-app.get("/", (req, res) => {
-  res.json({ message: "hello" });
-});
+// app.get("/", (req, res) => {
+//   res.json({ message: "hello" });
+// });
 
 //user route
 app.use("/user",userRoutes)
+app.use("/incomes", incomeRoutes);
 
