@@ -9,7 +9,7 @@ const incomeSchema = new Schema(
       ref: "user",
       required: true,
     },
-    source: {
+    description: {
       type: String,
       required: true,
     },

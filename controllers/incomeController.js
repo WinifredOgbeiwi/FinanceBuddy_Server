@@ -26,13 +26,13 @@ const getSingleIncome = async (req, res) => {
   }
 };
 
-const createIncome = async (req, res) => {
-  const { userId, source, amount, date, category } = req.body;
+const createIncomes = async (req, res) => {
+  const { userId, description, amount, date, category } = req.body;
 
   try {
     const newIncome = await incomeModel.create({
       userId,
-      source,
+      description,
       amount,
       date,
       category,
@@ -44,7 +44,7 @@ const createIncome = async (req, res) => {
   }
 };
 
-const editIncome = async (req, res) => {
+const editIncomes = async (req, res) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -62,7 +62,7 @@ const editIncome = async (req, res) => {
   }
 };
 
-const deleteIncome = async (req, res) => {
+const deleteIncomes = async (req, res) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -77,4 +77,14 @@ const deleteIncome = async (req, res) => {
   }
 };
 
-export { createIncome, getIncomes, getSingleIncome, editIncome, deleteIncome };
+const getUserIncomes = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const incomes = await incomeModel.find({ userId: userId });
+    res.status(200).json({ incomes });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export { createIncomes, getIncomes, getSingleIncome, editIncomes, deleteIncomes, getUserIncomes };
