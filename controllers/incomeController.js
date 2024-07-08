@@ -76,15 +76,45 @@ const deleteIncomes = async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 };
-
 const getUserIncomes = async (req, res) => {
   const userId = req.params.userId;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
   try {
-    const incomes = await incomeModel.find({ userId: userId });
-    res.status(200).json({ incomes });
+    const totalIncomes = await incomeModel.countDocuments({ userId: userId });
+    const incomes = await incomeModel
+      .find({ userId: userId })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      incomes,
+      totalIncomes,
+      currentPage: page,
+      totalPages: Math.ceil(totalIncomes / limit),
+    });
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
-export { createIncomes, getIncomes, getSingleIncome, editIncomes, deleteIncomes, getUserIncomes };
+// const getUserIncomes = async (req, res) => {
+//   const userId = req.params.userId;
+//   try {
+//     const incomes = await incomeModel.find({ userId: userId });
+//     res.status(200).json({ incomes });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// }
+
+export {
+  createIncomes,
+  getIncomes,
+  getSingleIncome,
+  editIncomes,
+  deleteIncomes,
+  getUserIncomes,
+};
