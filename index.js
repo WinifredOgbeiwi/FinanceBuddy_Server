@@ -19,7 +19,10 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const corsOption = {
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://financialbuddy-client.onrender.com",
+  ],
 };
 
 app.use(express.json());
