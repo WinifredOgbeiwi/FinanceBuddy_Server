@@ -43,9 +43,9 @@ app.listen(port, async () => {
 });
 
 //default route
-// app.get("/", (req, res) => {
-//   res.json({ message: "hello" });
-// });
+ app.get("/", (req, res) => {
+res.json({ message: "Welcome to Finance Buddy" });
+ });
 
 //user route
 app.use("/user",userRoutes)
