@@ -8,6 +8,7 @@ import { database } from "./config/db.js";
 import userRoutes from './routes/userRoutes.js'
 import incomeRoutes from './routes/incomeRoutes.js'
 import expensesRoutes from "./routes/expensesRoutes.js"
+import savingsRoutes from "./routes/savingsRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -47,4 +48,5 @@ app.listen(port, async () => {
 app.use("/user",userRoutes)
 app.use("/incomes", incomeRoutes);
 app.use("/expenses", expensesRoutes);
+app.use("/savings", savingsRoutes);
 
