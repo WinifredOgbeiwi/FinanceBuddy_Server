@@ -22,7 +22,7 @@ const corsOption = {
   origin: [
     "http://localhost:5173",
     "https://financialbuddy-client.onrender.com",
-  ],
+  ]
 };
 
 app.use(express.json());
