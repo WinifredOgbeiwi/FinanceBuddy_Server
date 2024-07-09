@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename);
 const corsOption = {
   origin: [
     "http://localhost:5173",
-    "https://financialbuddy-client.onrender.com",
+    "https://financialbuddy.onrender.com",
   ]
 };
 
